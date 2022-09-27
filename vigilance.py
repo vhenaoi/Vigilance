@@ -13,6 +13,9 @@ def fit_func(x,*coeffs):
 #def func(x, a, b, c):
     #return a * np.exp(-b * x) + c
 
+def objective(x, a, b):
+	return a * x + b
+
 def find_nearest(array, value):
     nearest = []
     for ay in array:
@@ -31,7 +34,8 @@ def find_nearest(array, value):
     return near   
 
 def selectxy(subject):
-    ticks = np.array(subject['segm'][:len(subject)])
+    ticks = np.array(subject['segm'])
+    #ticks = np.array(subject['segm'][:len(subject)])
     Time = range(len(ticks)-1)
     df_bands_end = subject[:-1]
     return Time,df_bands_end,ticks
@@ -102,7 +106,7 @@ def select_color(path,sheet_name):
         color_col.append(c[:3])
     return color_col
 
-def iter_sbj(subject,bands=None,columns_names_bands=None,c=None,sbj_group=None,legend=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
+def iter_sbj(subject,bands,columns_names_bands=None,c=None,sbj_group=None,legend=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
     s,e =bands_select(bands)
     for j in columns_names_bands[s:e]:
         Time,df_bands_end,ticks = selectxy(subject)
@@ -126,8 +130,8 @@ def iter_sbj(subject,bands=None,columns_names_bands=None,c=None,sbj_group=None,l
             plt.grid() 
 
 def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
-    Time = np.array(range(int(len(subject))))
-    #Time = np.arange(0, 45, 0.5)
+    #Time = np.array(range(int(len(subject))))
+    Time = np.arange(0, 45, 0.5)
     df_bands_end = subject.iloc[:, 1:]
     color = ['b','r']
     for c,j in enumerate(df_bands_end):
@@ -141,6 +145,108 @@ def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=No
         plt.ylim(0,16)
         plt.legend(borderaxespad=0,fontsize=size)  
         plt.grid()
+
+def expert(df,path_bands,group,legend,tren,size,title,c):
+    ticks = ('R','N3','N2','N1','D','A')
+    if group != None:
+        colums = group
+    for col in range(len(colums)):
+        subject=df[colums[col]] 
+        new_df = subject.dropna()
+        Time = df['Time'][:len(new_df)]
+        base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject.name,size=size)
+        #base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject['sbj'].iloc[0][:-5],size=None)
+        if path_bands != None:
+            plt.xlabel("Segment [3min ea]",fontsize=size)
+            plt.ylabel("Power [uV]",fontsize=size)
+            plt.xticks(Time, ticks[:-1])
+            plt.xlim(0,len(Time))
+            plt.ylim(0,5) 
+            #plt.title('Quantitative EEG analysis'+str(title)+' '+i+' '+status,fontsize=size)
+            plt.grid() 
+        else:
+            plt.xlabel("Time[min]",fontsize=size)
+            plt.ylabel("Sleepiness level [Qualitative]",fontsize=size)
+            plt.yticks((-1,0,1,2,3,4), ticks)
+            plt.xlim(-1,30)
+            plt.ylim(-1,5) 
+            plt.title('Qualitative EEG analysis - Expert analysis '+str(title)+' '+' '+status,fontsize=size)
+            plt.grid() 
+        if group == None:
+            plt.grid()
+            plt.show()
+
+def group_all_glob_false(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c):
+    df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
+    df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
+    subject=mask(df_group,colums[col])
+    sbj_group = colums[col]
+    if len(subject) != 0:
+        if bands == ['OE','EO']:
+            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+        else:
+            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)
+
+def group_none_glob_false(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c):
+    subject=mask(df_bands,colums[col])
+    sbj_group = colums[col]
+    if len(subject) != 0:
+        if bands == ['OE','EO']:
+            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+        else:
+            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
+    plt.grid()
+    plt.show()
+
+def group_all_glob_true( df_bands,group,columns_names_bands,colums,col,bands,tren,legend,path_bands,size,c):
+    df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
+    df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
+    subject=mask(df_group,colums[col]+'_glob')
+    sbj_group=colums[col]+'_glob'
+    if len(subject) != 0:
+        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)                  
+
+def group_none_glob_true(df_bands,colums,columns_names_bands,bands,col,tren,legend,path_bands,size,c):
+    subject=mask(df_bands,colums[col]+'_glob')
+    sbj_group=colums[col]+'_glob'
+    if len(subject) != 0:
+        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
+    plt.grid()
+    plt.show()
+
+def expert_relations(df,bands,columns_names_bands,legend,tren,group,df_bands,size):
+    df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
+    df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
+    if group != None:
+        colums = group
+    for col in range(len(colums)):
+        subject=df[colums[col]] 
+        s,e =bands_select(bands)
+        for j in columns_names_bands[s:e]:
+            new_df = subject.dropna()
+            sub = df_bands[df_bands['sbj']==subject.name]
+            T,df_bands_end,ticks_ax1 = selectxy(sub)
+            if tren == True:   
+                fig = plt.figure()
+                ax1 = fig.add_subplot(111)
+                ax2 = ax1.twinx()
+                ticks_ax2 = ('R','N3','N2','N1','D','A')
+                ax2.plot(T,new_df[::3].iloc[:len(T)],label="Qualitative",c='g')
+                ax1.plot(T,df_bands_end[j],label="Quantitative",c='c')
+                ax1.yaxis.set_label_position("right")
+                ax1.yaxis.tick_right() 
+                ax2.yaxis.set_label_position("left")
+                ax2.yaxis.tick_left()
+                ax2.set_ylim([0,5])
+                ax2.set_yticklabels(ticks_ax2)
+                ax1.set_xticks(np.array([0,1,2,3,4]))
+                ax1.set_xticklabels(list(df_bands_end['segm']))
+                ax2.set_ylabel("Qualitative")
+                ax1.set_ylabel("Quantitative")
+                fig.legend()
+                plt.title(subject.name)
+                plt.grid()
+                plt.show() 
 
 def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
     #lista = [mod1,mod2,mod3,mod4,mod5,mod6]
@@ -223,70 +329,21 @@ def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size
         for col in range(len(colums)):
             print(colums[col])   
             if group != None and glob == False:
-                df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
-                df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
-                subject=mask(df_group,colums[col])
-                sbj_group = colums[col]
-                if len(subject) != 0:
-                    if bands == ['OE','EO']:
-                        iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
-                    else:
-                        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)
+                group_all_glob_false(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c)   
             elif group == None and glob == False:
-                subject=mask(df_bands,colums[col])
-                sbj_group = colums[col]
-                if len(subject) != 0:
-                    if bands == ['OE','EO']:
-                        iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
-                    else:
-                        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
-                plt.grid()
-                plt.show()
+                group_none_glob_false(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c)
             elif group != None and glob == True:
-                df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
-                df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
-                subject=mask(df_group,colums[col]+'_glob')
-                sbj_group=colums[col]+'_glob'
-                if len(subject) != 0:
-                    iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)                  
+                if status == 'Relations and Expert':
+                    expert_relations(df,bands,columns_names_bands,legend,tren,group,df_bands,size)                   
+                else:
+                    group_all_glob_true( df_bands,group,columns_names_bands,colums,col,bands,tren,legend,path_bands,size,c)
             elif group == None and glob == True:
-                subject=mask(df_bands,colums[col]+'_glob')
-                sbj_group=colums[col]+'_glob'
-                if len(subject) != 0:
-                    iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
-                plt.grid()
-                plt.show()
+                group_none_glob_true(df_bands,colums,columns_names_bands,bands,col,tren,legend,path_bands,size,c)              
             else:
                 pass
     else:
-        ticks = ('R','N3','N2','N1','D','A')
-        if group != None:
-            colums = group
-        for col in range(len(colums)):
-            subject=df[colums[col]] 
-            new_df = subject.dropna()
-            Time = df['Time'][:len(new_df)]
-            base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject.name,size=size)
-            #base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject['sbj'].iloc[0][:-5],size=None)
-            if path_bands != None:
-                plt.xlabel("Segment [3min ea]",fontsize=size)
-                plt.ylabel("Power [uV]",fontsize=size)
-                plt.xticks(Time, ticks[:-1])
-                plt.xlim(0,len(Time))
-                plt.ylim(0,5) 
-                #plt.title('Quantitative EEG analysis'+str(title)+' '+i+' '+status,fontsize=size)
-                plt.grid() 
-            else:
-                plt.xlabel("Time[min]",fontsize=size)
-                plt.ylabel("Sleepiness level [Qualitative]",fontsize=size)
-                plt.yticks((-1,0,1,2,3,4), ticks)
-                plt.xlim(-1,30)
-                plt.ylim(-1,5) 
-                plt.title('Qualitative EEG analysis - Expert analysis '+str(title)+' '+' '+status,fontsize=size)
-                plt.grid() 
-            if group == None:
-                plt.grid()
-                plt.show()
+        expert(df,path_bands,group,legend,tren,size,title)
+       
 
     if group != None:
         if plot == False:
@@ -307,15 +364,16 @@ def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size
 #['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
 
 def opcion(op):
-    path = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\Sleep.xlsx"
+    #path = r"C:\Users\Pluto\Desktop\Veronica\Sleep.xlsx"
+    path = r"E:\Academico\Universidad\Posgrado\Tesis\Paquetes\Vigilance\Sleep.xlsx"
     sheet_name="Grafico"
     c=select_color(path,sheet_name)
-    if op == 'Bandas individuales':
-        path_bands = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Gp.xlsx"
+    if op == 'Individual bands':
+        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
         sheet_name_bands = "SBJ"
         #group = ['Lille04_glob','Brescia20_glob','Brescia23_glob','Genova2_glob','Brescia26_glob']
         group = None
-        path_save = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Graphics"
+        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
         bands = ['alpha2']
         size = 18
         legend = True
@@ -326,27 +384,28 @@ def opcion(op):
         status = ''
         title = ''
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size,legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
-    elif op == 'Relaciones':
-        path_bands = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Gp.xlsx"
+    elif op == 'Relations':
+        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
         sheet_name_bands= "Foglio2"
-        group = ['Nold01_glob','Nold03_glob','Nold04_glob','Nold05_glob','Nold06_glob']
-        path_save = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Graphics"
+        group = None
+        #['Nold01_glob','Nold03_glob','Nold04_glob','Nold05_glob','Nold06_glob']
+        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
         bands = ['alpha/delta']
         size = 18
         legend = True
-        tren = False
+        tren = True
         plot = True
         glob = True
         save = None
         status = '(No Sleep)'
         title = '.'
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
-    elif op == 'Experto':
+    elif op == 'Expert':
         path_bands = None 
         sheet_name_bands= None
         #group = ['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
         group = None
-        path_save = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Graphics"
+        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
         size = 18
         legend = True
         tren = True
@@ -357,7 +416,7 @@ def opcion(op):
         title = ''
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=None,title=title,glob=glob,c=c)
     elif op == 'Reactividad':
-        path_bands = r"E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati\Gp.xlsx"
+        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
         sheet_name_bands = "Reactivity"
         #group = ['Brescia17']
         group=None
@@ -372,3 +431,19 @@ def opcion(op):
         status = ''
         title = ''
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
+    elif op == 'Relations and Expert':
+            #path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
+            path_bands = r"E:\Academico\Universidad\Posgrado\Tesis\Paquetes\Vigilance\Gp.xlsx"
+            sheet_name_bands = "Foglio2"
+            group = ['Brescia17']
+            path_save = None
+            bands = ['alpha/delta']
+            size = 18
+            legend = True
+            tren = True
+            plot = True
+            glob = True
+            save = None
+            status = 'Relations and Expert'
+            title = ''
+            graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
