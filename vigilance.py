@@ -400,16 +400,15 @@ def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size
 #['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
 
 def opcion(op):
-    #path = r"C:\Users\Pluto\Desktop\Veronica\Sleep.xlsx"
-    path = r"C:\Users\Pluto\Desktop\Veronica\Vigilance\Sleep.xlsx"
+    path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Sleep.xlsx"
     sheet_name="Grafico"
     c=select_color(path,sheet_name)
     if op == 'Individual bands':
-        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
+        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
         sheet_name_bands = "SBJ"
         #group = ['Lille04_glob','Brescia20_glob','Brescia23_glob','Genova2_glob','Brescia26_glob']
         group = None
-        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
+        path_save = None
         bands = ['alpha2']
         size = 18
         legend = True
@@ -421,11 +420,11 @@ def opcion(op):
         title = ''
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size,legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
     elif op == 'Relations':
-        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
+        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
         sheet_name_bands= "Foglio2"
         group = None
         #['Nold01_glob','Nold03_glob','Nold04_glob','Nold05_glob','Nold06_glob']
-        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
+        path_save = None
         bands = ['alpha/delta','alpha/theta','alpha/deltatheta']
         size = 18
         legend = True
@@ -441,7 +440,7 @@ def opcion(op):
         sheet_name_bands= None
         #group = ['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
         group = None
-        path_save = r"C:\Users\Pluto\Desktop\Veronica\Graphics"
+        path_save = None
         size = 18
         legend = True
         tren = True
@@ -452,7 +451,7 @@ def opcion(op):
         title = ''
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=None,title=title,glob=glob,c=c)
     elif op == 'Reactividad':
-        path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
+        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
         sheet_name_bands = "Reactivity"
         #group = ['Brescia17']
         group=None
@@ -469,7 +468,7 @@ def opcion(op):
         graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
     elif op == 'Relations and Expert':
             #path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
-            path_bands = r"C:\Users\Pluto\Desktop\Veronica\Vigilance\Gp.xlsx"
+            path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
             sheet_name_bands = "SBJ"
             group = None
             path_save = None

@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-path = r"C:\Users\Pluto\Desktop\Veronica\Vigilance\Gp.xlsx"
+path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
 sheet_name = "ADMCI"
 
 df = pd.read_excel(path,sheet_name=sheet_name)
