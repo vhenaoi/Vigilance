@@ -4,10 +4,11 @@ from unicodedata import name
 import pandas as pd
 #from numpy import number
 
-name = 'THESSALONIKI'
-n = '17'
+name = 'Nold'
+n = ' 8'
 task = 'Sleep'
-Path_in = r'E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati'+'/'+task+'/'+name+n+'/'+'eLoreta'
+path = r'E:\Academico\Universidad\Posgrado\La Sapienza\Vigilance\EEGlab\Dati'
+Path_in = path +'/'+task+'/'+name+n+'/'+'eLoreta'
 #Path_in+'/'+name+'/'+name+n+
 path_txt = Path_in+'/'+'01 txt'
 path_downsampling =Path_in+'/'+'02 downsampling'
