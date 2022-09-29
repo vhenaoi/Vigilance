@@ -110,19 +110,23 @@ def iter_sbj(subject,bands,columns_names_bands=None,c=None,sbj_group=None,legend
     if len(bands) != 1:
         for b in bands:
             s,e =bands_select([b])
+            graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,title)
     else:
         s,e =bands_select(bands)
+        graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,title)
+
+def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,title):
     for j in columns_names_bands[s:e]:
         Time,df_bands_end,ticks = selectxy(subject)
-        base(df_bands_end[j],Time=Time,legend=legend,tren=tren,i=j,c=c,sbj=subject['sbj'].iloc[0][:-5],size=None)
+        base(df_bands_end[j],Time=Time,legend=legend,tren=tren,i=j,c=c,sbj=subject['sbj'].unique()[0],size=None)
         if path_bands != None:
             plt.xlabel("Segment [3 min ea]",fontsize=size)
             plt.ylabel("",fontsize=size)
             plt.xticks(Time, ticks[:-1])
             plt.xlim(0,len(Time))
+            plt.ylim([1**-10, 1**11])
             plt.yscale('log')
-            plt.ylim([1**-10,1**11])
-            #plt.title('Quantitative EEG analysis'+str(title)+' '+i+' '+status,fontsize=size)
+            plt.title('Quantitative EEG analysis '+str(title),fontsize=size)
             plt.grid() 
         else:
             plt.xlabel("Time[min]",fontsize=size)
@@ -130,17 +134,19 @@ def iter_sbj(subject,bands,columns_names_bands=None,c=None,sbj_group=None,legend
             plt.yticks((-1,0,1,2,3,4), ticks)
             plt.xlim(-1,30)
             plt.ylim(-1,5) 
-            plt.title('Qualitative EEG analysis - Expert analysis '+str(title)+' '+' '+status,fontsize=size)
+            plt.title('Qualitative EEG analysis - Expert analysis '+str(title),fontsize=size)
             plt.grid() 
 
 def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
-    #Time = np.array(range(int(len(subject))))
-    Time = np.arange(0, 45, 0.5)
+    if title == 'Reactivity':
+        Time = np.arange(0, 45, 0.5)
+    else:
+        Time = np.array(range(int(len(subject))))
     df_bands_end = subject.iloc[:, 1:]
     color = ['b','r']
     for c,j in enumerate(df_bands_end):
-        print(c)
-        print(j)
+        #print(c)
+        #print(j)
         plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         plt.xlabel("Frequency [Hz]",fontsize=size)
         plt.ylabel("Power spectral density [uV]",fontsize=size)
@@ -174,13 +180,13 @@ def expert(df,path_bands,group,legend,tren,size,title,c):
             plt.yticks((-1,0,1,2,3,4), ticks)
             plt.xlim(-1,30)
             plt.ylim(-1,5) 
-            plt.title('Qualitative EEG analysis - Expert analysis '+str(title)+' '+' '+status,fontsize=size)
+            plt.title('Qualitative EEG analysis - Expert analysis '+str(title),fontsize=size)
             plt.grid() 
         if group == None:
             plt.grid()
             plt.show()
 
-def group_all_glob_false(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c):
+def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c,title):
     df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
     df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
     subject=mask(df_group,colums[col])
@@ -189,36 +195,20 @@ def group_all_glob_false(group,columns_names_bands,bands,df_bands,colums,col,tre
         if bands == ['OE','EO']:
             iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
         else:
-            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)
+            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
 
-def group_none_glob_false(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c):
+def group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title):
     subject=mask(df_bands,colums[col])
     sbj_group = colums[col]
     if len(subject) != 0:
         if bands == ['OE','EO']:
-            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,title=title,size=size)
         else:
-            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
+            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
     plt.grid()
     plt.show()
 
-def group_all_glob_true( df_bands,group,columns_names_bands,colums,col,bands,tren,legend,path_bands,size,c):
-    df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
-    df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
-    subject=mask(df_group,colums[col]+'_glob')
-    sbj_group=colums[col]+'_glob'
-    if len(subject) != 0:
-        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)                  
-
-def group_none_glob_true(df_bands,colums,columns_names_bands,bands,col,tren,legend,path_bands,size,c):
-    subject=mask(df_bands,colums[col]+'_glob')
-    sbj_group=colums[col]+'_glob'
-    if len(subject) != 0:
-        iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=None,size=size)    
-    plt.grid()
-    plt.show()
-
-def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_bands=None,size=None):
+def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_bands=None,size=None,title=None):
     df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
     df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
     if group != None:
@@ -228,10 +218,7 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
     s,e =bands_select(bands)  
     for j in columns_names_bands[s:e]:
         for col in range(len(colums)):
-            if colums[col].find('glob') != -1:
-                subject=df[colums[col][:colums[col].find('glob')-1]] 
-            else:
-                subject=df[colums[col]]      
+            subject=df[colums[col]]      
             new_df = subject.dropna()
             sub = df_bands[df_bands['sbj']==subject.name]
             T,df_bands_end,ticks_ax1 = selectxy(sub)
@@ -267,7 +254,7 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                     ax2.set_ylabel("Qualitative")
                     ax1.set_ylabel("Quantitative")
                     fig.legend(loc = "upper center",bbox_to_anchor=(0.8, 0.9))
-                    plt.title(subject.name)
+                    plt.title(title + ' ' +subject.name)
                     plt.grid()
                     plt.show() 
                 else:
@@ -298,16 +285,20 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
         fit_pos = f_results.index(fit_val)
         fit = fr[fit_pos]
         if tren == True:
-            plt.plot(Time,new_df,label="Subject "+i,color=c)
-            plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial = '+ str(fit_pos))
+            if sbj == i:
+                plt.plot(Time,new_df,label="Subject "+sbj,color=c)
+            else:
+                plt.plot(Time,new_df,label="Subject "+sbj+' '+i,color=c)
+            #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial = '+ str(fit_pos))
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+i+' '+sbj,color=c)
             plt.legend(borderaxespad=0,fontsize=size)  
             plt.grid()
         elif tren == False:
+            pass
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+i+' '+sbj,color=c)
-            plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj )#+ ' Trend Line of degree polynomial = '+ str(fit_pos))
-            plt.legend(borderaxespad=0,fontsize=size, loc='upper center',ncol=3,bbox_to_anchor=(0.5, 1.05))
-            plt.grid()
+            #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj )#+ ' Trend Line of degree polynomial = '+ str(fit_pos))
+            #plt.legend(borderaxespad=0,fontsize=size, loc='upper center',ncol=3,bbox_to_anchor=(0.5, 1.05))
+            #plt.grid()
         elif tren == None:
             plt.plot(Time,new_df,label="Subject "+i,color=c)
             plt.legend(borderaxespad=0,fontsize=size, loc='upper center',ncol=3,bbox_to_anchor=(0.5, 1.05))
@@ -318,12 +309,13 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
             plt.plot(Time,new_df,label="Behaviour ",color=c)
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+sbj,color=c)
             #for f in fit_results:
-            plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
+            #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
 
         elif tren == False:
+            pass
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+sbj,color=c)
             #for f in fit_results:
-            plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
+            #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
         
         elif tren == None:
             plt.plot(Time,new_df,label="Behaviour ",color=c)
@@ -332,7 +324,7 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
 
 
 
-def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size=None, legend=True, tren=True, plot=True, group=None,status=None,path_save=None,save=False,bands=None,title=None,glob=None,c=None):
+def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot, group,status,bands,title,c):
     df = pd.read_excel(path,sheet_name=sheet_name)
     columns_names = df.columns.values
     colums = columns_names[1:17]
@@ -361,24 +353,20 @@ def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size
                 #df_bands[columns_names_bands[col_names]] = new_column[columns_names_bands[col_names]]
         for col in range(len(colums)):
             print(colums[col])   
-            if group != None and glob == False:
-                group_all_glob_false(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c)   
-            elif group == None and glob == False:
-                group_none_glob_false(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c)
-            elif group != None and glob == True:
+            if group != None:
                 if status == 'Relations and Expert':
-                    expert_relations(df,bands,columns_names_bands,legend,tren,df_bands,size)                   
+                    expert_relations(df,bands,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                   
                 else:
-                    group_all_glob_true( df_bands,group,columns_names_bands,colums,col,bands,tren,legend,path_bands,size,c)
-            elif group == None and glob == True:
+                    group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c,title)   
+            elif group == None:
                 if status == 'Relations and Expert':
-                    expert_relations(df,bands,columns_names_bands,legend,tren,group,df_bands,size)                   
+                    expert_relations(df,bands,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                   
                 else:
-                    group_none_glob_true(df_bands,colums,columns_names_bands,bands,col,tren,legend,path_bands,size,c)              
+                    group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title)            
             else:
                 pass
     else:
-        expert(df,path_bands,group,legend,tren,size,title)
+        expert(df,path_bands,group,legend,tren,size,title,c)
        
 
     if group != None:
@@ -388,97 +376,8 @@ def graphic(path=None,sheet_name=None,path_bands=None,sheet_name_bands=None,size
             plt.grid()
             plt.show()
 
-    if save != None:
-        plt.savefig(path_save+"/"+status+"_"+save+".png")
 
 
-#['Nold01_glob','Nold03_glob','Nold04_glob','Nold05_glob','Nold06_glob']
-#['Nold01','Nold03','Nold04','Nold05','Nold06']
-#['Marseille11_glob','Genova09_glob','Thessaloniki17_glob','Brescia01_glob','Marseille01_glob','Brescia17_glob']
-#['Marseille11','Genova09','Thessaloniki17','Brescia01','Marseille01','Brescia17']
-#['Lille04_glob','Brescia20_glob','Brescia23_glob','Genova2_glob','Brescia26_glob']
-#['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
 
-def opcion(op):
-    path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Sleep.xlsx"
-    sheet_name="Grafico"
-    c=select_color(path,sheet_name)
-    if op == 'Individual bands':
-        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
-        sheet_name_bands = "SBJ"
-        #group = ['Lille04_glob','Brescia20_glob','Brescia23_glob','Genova2_glob','Brescia26_glob']
-        group = None
-        path_save = None
-        bands = ['alpha2']
-        size = 18
-        legend = True
-        tren = True
-        plot = True
-        glob = True
-        save = None
-        status = ''
-        title = ''
-        graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size,legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
-    elif op == 'Relations':
-        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
-        sheet_name_bands= "Foglio2"
-        group = None
-        #['Nold01_glob','Nold03_glob','Nold04_glob','Nold05_glob','Nold06_glob']
-        path_save = None
-        bands = ['alpha/delta','alpha/theta','alpha/deltatheta']
-        size = 18
-        legend = True
-        tren = None
-        plot = True
-        glob = True
-        save = None
-        status = ''
-        title = ''
-        graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
-    elif op == 'Expert':
-        path_bands = None 
-        sheet_name_bands= None
-        #group = ['Lille04','Brescia20','Brescia23','Genova2','Brescia26']
-        group = None
-        path_save = None
-        size = 18
-        legend = True
-        tren = True
-        plot = True
-        glob = True
-        save = None
-        status = ''
-        title = ''
-        graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=None,title=title,glob=glob,c=c)
-    elif op == 'Reactividad':
-        path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
-        sheet_name_bands = "Reactivity"
-        #group = ['Brescia17']
-        group=None
-        path_save = None
-        bands = ['OE','EO']
-        size = 18
-        legend = True
-        tren = True
-        plot = True
-        glob = False
-        save = None
-        status = ''
-        title = ''
-        graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
-    elif op == 'Relations and Expert':
-            #path_bands = r"C:\Users\Pluto\Desktop\Veronica\Gp.xlsx"
-            path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
-            sheet_name_bands = "SBJ"
-            group = None
-            path_save = None
-            bands = ['alpha2']
-            size = 18
-            legend = True
-            tren = True
-            plot = True
-            glob = True
-            save = None
-            status = 'Relations and Expert'
-            title = ''
-            graphic(path=path,sheet_name=sheet_name,path_bands=path_bands,sheet_name_bands=sheet_name_bands,size=size, legend=legend, tren=tren, plot=plot, group=group,status=status,path_save=path_save,save=save,bands=bands,title=title,glob=glob,c=c)
+
+            
