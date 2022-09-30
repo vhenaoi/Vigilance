@@ -4,13 +4,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
-sheet_name = "ADMCI"
+sheet_name1 = 'Relations Post'
 
-df = pd.read_excel(path,sheet_name=sheet_name)
+df = pd.read_excel(path,sheet_name=sheet_name1)
+
 fig, ax = plt.subplots()
 df_violin = [df[df['segm']=='segm1']['alpha/delta'],df[df['segm']=='segm2']['alpha/delta'],df[df['segm']=='segm3']['alpha/delta'],df[df['segm']=='segm4']['alpha/delta'],df[df['segm']=='segm5']['alpha/delta'],df[df['segm']=='segm6']['alpha/delta'],df[df['segm']=='segm7']['alpha/delta']]
 ax.violinplot(df_violin,showmedians=True)
 plt.ylim(-2,8)
+plt.title(sheet_name1)
 
 
 #sns.catplot(x='segm',y='alpha/theta',data=df,kind="swarm",legend=True,hue='sbj')
@@ -22,4 +24,6 @@ sns.pointplot(x='segm',y='alpha/theta', data=df,scale=0.05,order=['segm1','segm2
 sns.swarmplot(data=df, x='segm',y='alpha/theta', size=3,hue='sbj',order=['segm1','segm2','segm3','segm4','segm5','segm6','segm7'])
 plt.legend(loc = "upper center",ncol=6,bbox_to_anchor=(1.5, 1.5))
 plt.ylim(-2,8)
+plt.title(sheet_name1)
 plt.show()
+

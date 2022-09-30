@@ -94,7 +94,7 @@ def mask(dataframe,sbj):
 def select_color(path,sheet_name):
     df = pd.read_excel(path,sheet_name=sheet_name)
     columns_names = df.columns.values
-    col = columns_names[1:17]
+    col = columns_names[1:21]
     color_col = []
 
     for c in col:
@@ -124,8 +124,8 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
             plt.ylabel("",fontsize=size)
             plt.xticks(Time, ticks[:-1])
             plt.xlim(0,len(Time))
-            plt.ylim([1**-10, 1**11])
-            plt.yscale('log')
+            #plt.ylim([1**-10, 1**11])
+            #plt.yscale('log')
             plt.title('Quantitative EEG analysis '+str(title),fontsize=size)
             plt.grid() 
         else:
@@ -138,10 +138,7 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
             plt.grid() 
 
 def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
-    if title == 'Reactivity':
-        Time = np.arange(0, 45, 0.5)
-    else:
-        Time = np.array(range(int(len(subject))))
+    Time = np.arange(0, 45, 0.5)
     df_bands_end = subject.iloc[:, 1:]
     color = ['b','r']
     for c,j in enumerate(df_bands_end):
@@ -164,15 +161,18 @@ def expert(df,path_bands,group,legend,tren,size,title,c):
         subject=df[colums[col]] 
         new_df = subject.dropna()
         Time = df['Time'][:len(new_df)]
-        base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject.name,size=size)
+        if c == None:
+            base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=None,sbj=subject.name,size=size)
+        else:
+            base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject.name,size=size)
         #base(new_df,Time=Time,legend=legend,tren=tren,i=colums[col],c=c[col],sbj=subject['sbj'].iloc[0][:-5],size=None)
         if path_bands != None:
             plt.xlabel("Segment [3min ea]",fontsize=size)
-            plt.ylabel("Power [uV]",fontsize=size)
+            plt.ylabel("",fontsize=size)
             plt.xticks(Time, ticks[:-1])
             plt.xlim(0,len(Time))
             plt.ylim(0,5) 
-            #plt.title('Quantitative EEG analysis'+str(title)+' '+i+' '+status,fontsize=size)
+            plt.title('Quantitative EEG analysis'+str(title),fontsize=size)
             plt.grid() 
         else:
             plt.xlabel("Time[min]",fontsize=size)
@@ -192,19 +192,32 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
     subject=mask(df_group,colums[col])
     sbj_group = colums[col]
     if len(subject) != 0:
-        if bands == ['OE','EO']:
-            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+        if bands == ['EC','EO'] or bands == ['EC']:
+            if c == None:
+                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size)
+            else:
+                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
         else:
-            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
+            if c == None:
+                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=None,sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
+            else:
+                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
 
 def group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title):
     subject=mask(df_bands,colums[col])
     sbj_group = colums[col]
     if len(subject) != 0:
-        if bands == ['OE','EO']:
-            iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,title=title,size=size)
+        if bands == ['EC','EO'] or bands == ['EC']:
+            if c == None:
+                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,title=title,size=size)
+            else:
+                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,title=title,size=size)
         else:
-            iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
+            if c == None:
+                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=None,sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
+            else:    
+                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
+
     plt.grid()
     plt.show()
 
@@ -275,7 +288,7 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
     #z = np.polyfit(Time,new_df,g)
     #p = np.poly1d(z)
     if legend == True:
-        f_results = []
+        '''f_results = []
         fr = []
         for f in fit_results:
             avg_f = np.average(f)
@@ -283,7 +296,7 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
             fr.append(f)
         fit_val=find_nearest(f_results, 1)
         fit_pos = f_results.index(fit_val)
-        fit = fr[fit_pos]
+        fit = fr[fit_pos]'''
         if tren == True:
             if sbj == i:
                 plt.plot(Time,new_df,label="Subject "+sbj,color=c)
@@ -327,7 +340,7 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
 def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot, group,status,bands,title,c):
     df = pd.read_excel(path,sheet_name=sheet_name)
     columns_names = df.columns.values
-    colums = columns_names[1:17]
+    colums = columns_names[1:21]
     #c=select_color(colums)
 
     if path_bands != None:
@@ -373,6 +386,7 @@ def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot
         if plot == False:
             pass
         elif plot == True:
+            plt.title(title)
             plt.grid()
             plt.show()
 

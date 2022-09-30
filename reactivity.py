@@ -6,7 +6,7 @@ def graph_reactivity(path,sheet_name,sheet_name_bands,group,bands):
     path_bands = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Gp.xlsx"
     sheet_name_bands = sheet_name_bands
     group = group
-    if bands == ['OE','EO']:
+    if bands == ['EC','EO']:
         bands = bands
     else:
         print('Enter in the parameter bands the condition of closed eyes and open eyes')
