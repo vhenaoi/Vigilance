@@ -6,6 +6,7 @@ import random
 from scipy.optimize import curve_fit
 import statsmodels.api as sm
 from sklearn import preprocessing
+from scipy.interpolate import interp1d
 
 def fit_func(x,*coeffs):
     y = np.polyval(coeffs, x)
@@ -124,8 +125,8 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
             plt.ylabel("",fontsize=size)
             plt.xticks(Time, ticks[:-1])
             plt.xlim(0,len(Time))
-            #plt.ylim([1**-10, 1**11])
-            #plt.yscale('log')
+            plt.ylim([1**-10, 1**11])
+            plt.yscale('log')
             plt.title('Quantitative EEG analysis '+str(title),fontsize=size)
             plt.grid() 
         else:
@@ -144,9 +145,12 @@ def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=No
     for c,j in enumerate(df_bands_end):
         #print(c)
         #print(j)
-        plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+        f = interp1d(Time,df_bands_end[j],kind='cubic')
+        plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         plt.xlabel("Frequency [Hz]",fontsize=size)
-        plt.ylabel("Power spectral density [uV]",fontsize=size)
+        plt.ylabel("Absolute power",fontsize=size)
         #plt.xticks(Time, ticks[:])
         plt.xlim(6,15)
         plt.ylim(0,16)
@@ -254,8 +258,13 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                 ax2 = ax1.twinx()
                 ticks_ax2 = ('R','N3','N2','N1','D','A',' ')
                 if len(Tend) == len(end_df): 
-                    ax2.plot(Tend,end_df,label="Qualitative",c='g')
-                    ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
+                    xnew = np.linspace(Tend[0],Tend[len(Tend)-1],300) #300 represents number of points to make between T.min and T.max
+                    f1 = interp1d(Tend,df_bands_end[j].iloc[:len(Tend)],kind='cubic')
+                    f2 = interp1d(Tend,end_df,kind='cubic')
+                    ax2.plot(xnew,f1(xnew),label="Qualitative - Expert",c='g')
+                    ax1.plot(xnew,f2(xnew),label="Quantitative - Power",c='c')
+                    #ax2.plot(Tend,end_df,label="Qualitative",c='g')
+                    #ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
                     ax1.yaxis.set_label_position("right")
                     ax1.yaxis.tick_right() 
                     ax2.yaxis.set_label_position("left")
@@ -264,8 +273,8 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                     ax2.set_yticklabels(ticks_ax2)
                     ax1.set_xticks(np.array(xt))
                     ax1.set_xticklabels(list(df_bands_end['segm']))
-                    ax2.set_ylabel("Qualitative")
-                    ax1.set_ylabel("Quantitative")
+                    ax2.set_ylabel("Qualitative - Expert")
+                    ax1.set_ylabel("Quantitative - Power")
                     fig.legend(loc = "upper center",bbox_to_anchor=(0.8, 0.9))
                     plt.title(title + ' ' +subject.name)
                     plt.grid()
@@ -299,9 +308,15 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
         fit = fr[fit_pos]'''
         if tren == True:
             if sbj == i:
-                plt.plot(Time,new_df,label="Subject "+sbj,color=c)
+                #plt.plot(Time,new_df,label="Subject "+sbj,color=c)
+                xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+                f = interp1d(Time,new_df,kind='cubic')
+                plt.plot(xnew,f(xnew),label="Subject "+sbj,color=c)
             else:
-                plt.plot(Time,new_df,label="Subject "+sbj+' '+i,color=c)
+                #plt.plot(Time,new_df,label="Subject "+sbj+' '+i,color=c)
+                xnew = np.linspace(Time[0],Time[len(Time)-1],300) #300 represents number of points to make between T.min and T.max
+                f = interp1d(Time,new_df,kind='cubic')
+                plt.plot(xnew,f(xnew),label="Subject "+sbj+' '+i,color=c)
             #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial = '+ str(fit_pos))
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+i+' '+sbj,color=c)
             plt.legend(borderaxespad=0,fontsize=size)  
@@ -313,13 +328,19 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
             #plt.legend(borderaxespad=0,fontsize=size, loc='upper center',ncol=3,bbox_to_anchor=(0.5, 1.05))
             #plt.grid()
         elif tren == None:
-            plt.plot(Time,new_df,label="Subject "+i,color=c)
+            #plt.plot(Time,new_df,label="Subject "+i,color=c)
+            xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+            f = interp1d(Time,new_df,kind='cubic')
+            plt.plot(xnew,f(xnew),label="Subject "+i,color=c)
             plt.legend(borderaxespad=0,fontsize=size, loc='upper center',ncol=3,bbox_to_anchor=(0.5, 1.05))
             plt.grid()
 
     if legend == False:
         if tren == True:
-            plt.plot(Time,new_df,label="Behaviour ",color=c)
+            #plt.plot(Time,new_df,label="Behaviour ",color=c)
+            xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+            f = interp1d(Time,new_df,kind='cubic')
+            plt.plot(xnew,f(xnew),label="Behaviour ",color=c)
             #plt.plot(Time,p(Time),linestyle='--',label="Trend "+sbj,color=c)
             #for f in fit_results:
             #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
@@ -331,7 +352,10 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
             #plt.plot(Time, fit_func(Time, *fit),linestyle='--', alpha=0.6,color=c, label=sbj + ' Trend Line of degree polynomial  = '+ str(fit_pos))
         
         elif tren == None:
-            plt.plot(Time,new_df,label="Behaviour ",color=c)
+            #plt.plot(Time,new_df,label="Behaviour ",color=c)
+            xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+            f = interp1d(Time,new_df,kind='cubic')
+            plt.plot(xnew,f(xnew),label='Behaviour',color=c)
 
     
 
@@ -386,7 +410,10 @@ def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot
         if plot == False:
             pass
         elif plot == True:
-            plt.title(title)
+            if title == 'Vigilance1minEC_Rest1minEO':
+                plt.title(title+'_ch_M')
+            else:
+                plt.title(title)
             plt.grid()
             plt.show()
 

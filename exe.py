@@ -10,16 +10,16 @@ ADMCI1 = ['Marseille11','Genova09','Thessaloniki17','Brescia01','Marseille01','B
 ADMCI2 =['Lille04','Brescia20','Brescia23','Genova02','Brescia26']
 all = ['Nold01','Nold03','Nold04','Nold05','Nold06','Nold07','Nold08','Marseille11','Genova09','Thessaloniki17','Brescia01','Marseille01','Brescia17','Lille04','Brescia20','Brescia23','Genova02','Brescia26']
 
-#bands
+#bands - sheet_name_bands: Relations
 alpha_theta = ['alpha/delta']
 alpha_deltatheta = ['alpha/deltatheta']
 alpha_theta = ['alpha/theta']
 all_bands = ['alpha/delta','alpha/deltatheta','alpha/theta']
 
-#reactivity =  ['EC','EO']
-reactivity =  ['EC']
+reactivity =  ['EC','EO']
+#reactivity =  ['EC']
 
-#bands ind
+#bands ind - sheet_name_bands: Individual bands
 alpha = ['alpha']
 alpha2 = ['alpha2']
 delta = ['delta']
@@ -36,11 +36,13 @@ sbj_global = 'SBJ Global'
 #'Reactivity'
 reactivity_post = 'Reactivity Post'
 reactivity_global = 'Reactivity Global'
+True_alpha = 'Vigilance3minEC_Rest3minEO'
 #'Relations'
 relations_post = 'Relations Post'
 relations_global = 'Relations Global'
 #'Expert'
-path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Sleep.xlsx"
+#path = r"C:\Users\Paperino\Desktop\Veronica\Vigilance\Sleep.xlsx"
+path='Vigilance\Sleep.xlsx'
 sheet_name="Grafico"
 
 def opcion(op):
@@ -56,15 +58,16 @@ def opcion(op):
         graph_relations_and_expert(path,sheet_name,sheet_name_bands,group,bands)
 
 #Multi_Input 
-'''sheet_name_bands = sbj_global
-for b in all_ind_bands:
-    bands = None
-    for sbj in all:
-        group = [sbj]
-        opcion('Expert')'''
+sheet_name_bands = reactivity_post
+#for b in all_bands:
+#    bands = [b]
+bands = reactivity
+for sbj in all:
+    group = [sbj]
+    opcion('Reactivity')
 
 #Input
-sheet_name_bands = reactivity_global
+'''sheet_name_bands = True_alpha
 bands = reactivity
 group = ['Marseille11']
-opcion('Reactivity')
+opcion('Reactivity')'''
