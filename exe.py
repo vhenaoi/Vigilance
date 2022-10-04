@@ -11,12 +11,12 @@ ADMCI2 =['Lille04','Brescia20','Brescia23','Genova02','Brescia26']
 all = ['Nold01','Nold03','Nold04','Nold05','Nold06','Nold07','Nold08','Marseille11','Genova09','Thessaloniki17','Brescia01','Marseille01','Brescia17','Lille04','Brescia20','Brescia23','Genova02','Brescia26']
 
 #Channels
-Marseille = ['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
-Brescia = ['P8/T6','T8/T4','F8','O2','P4','C4','F4','Fp2','Pz','Cz','Fz','O1','P3','C3','F3','Fp1','P7/T5','T7/T3','F7']
-Lille =	['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
-Salinicco =	['Fp1','Fp2','F3','F4','C3','C4','P3','P4','O1','O2','F7','F8','T7/T3','T8/T4','P7/T5','P8/T6','Fz','Cz','Pz']
-Genova = ['Fp2','F4','C4','P4','O2','F8','T8/T4','P8/T6','Fp1','F3','C3','P3','O1','F7','T7/T3','P7/T5','Fz','Cz','Pz']
-Nold =	['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
+Marseille_ch = ['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
+Brescia_ch = ['P8/T6','T8/T4','F8','O2','P4','C4','F4','Fp2','Pz','Cz','Fz','O1','P3','C3','F3','Fp1','P7/T5','T7/T3','F7']
+Lille_ch =	['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
+Salinicco_ch =	['Fp1','Fp2','F3','F4','C3','C4','P3','P4','O1','O2','F7','F8','T7/T3','T8/T4','P7/T5','P8/T6','Fz','Cz','Pz']
+Genova_ch = ['Fp2','F4','C4','P4','O2','F8','T8/T4','P8/T6','Fp1','F3','C3','P3','O1','F7','T7/T3','P7/T5','Fz','Cz','Pz']
+Nold_ch =	['Fp1','Fp2','F7','F3','Fz','F4','F8','T7/T3','C3','Cz','C4','T8/T4','P7/T5','P3','Pz','P4','P8/T6','O1','O2']
 
 
 
@@ -68,13 +68,13 @@ def opcion(op):
         graph_relations_and_expert(path,sheet_name,sheet_name_bands,group,bands)
 
 #Multi_Input 
-sheet_name_bands = sbj_global #falta esta y reactividad Nold
-#for b in all_bands:
-#    bands = [b]
-bands = alpha
-#for sbj in all:
-group = ['Marseille01']
-opcion('Relations and Expert')
+sheet_name_bands = True_alpha   
+for b in Ch_Post:
+    bands = [b]
+#bands = Ch_Post
+for sbj in Nold:
+    group = [sbj]
+    opcion('Reactivity')
 
 #Input
 '''sheet_name_bands = True_alpha
