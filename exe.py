@@ -30,7 +30,7 @@ reactivity =  ['EC','EO']
 Ch_Post = ['EO','C3','Cz','C4','P3','Pz','P4','O1','O2']
 
 #bands ind - sheet_name_bands: Individual bands
-alpha = ['alpha']
+alpha = ['alpha','alpha2']
 alpha2 = ['alpha2']
 delta = ['delta']
 theta = ['theta']
@@ -68,13 +68,13 @@ def opcion(op):
         graph_relations_and_expert(path,sheet_name,sheet_name_bands,group,bands)
 
 #Multi_Input 
-sheet_name_bands = relations_post
+sheet_name_bands = sbj_global #falta esta y reactividad Nold
 #for b in all_bands:
 #    bands = [b]
-bands = None
-for sbj in all:
-    group = ['Marseille01']
-    opcion('Relations and Expert')
+bands = alpha
+#for sbj in all:
+group = ['Marseille01']
+opcion('Relations and Expert')
 
 #Input
 '''sheet_name_bands = True_alpha
