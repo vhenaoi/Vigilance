@@ -73,8 +73,8 @@ sheet_name_bands = relations_global
 #    bands = [b]
 bands = all_bands
 #for sbj in Nold:
-group = ['Marseille01_60s']
-opcion('Individual bands')
+group = ['Marseille11_60s']
+opcion('Relations and Expert')
 
 #Input
 '''sheet_name_bands = True_alpha
