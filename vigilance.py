@@ -154,7 +154,7 @@ def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=No
         plt.ylabel("Absolute power",fontsize=size)
         #plt.xticks(Time, ticks[:])
         plt.xlim(6,15)
-        plt.ylim(0,16)
+        #plt.ylim(0,16)
         plt.legend(borderaxespad=0,fontsize=size,loc='upper center',ncol=4,bbox_to_anchor=(0.5, 1.05))  
         plt.grid()
 
@@ -261,17 +261,19 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
         colums = df_bands['sbj'].unique()
     if len(bands) != 1:
         for col in range(len(colums)):
-            subject=df[colums[col]]      
+            subject=df[colums[col]]  
+            if subject.name == 'Nold01':
+                print('NOLD01')    
             new_df = subject.dropna()
             sub = df_bands[df_bands['sbj']==subject.name]
             T,df_bands_end,ticks_ax1 = selectxy(sub)
             xt = []
-            if (len(T) < len(new_df[::3])) == True:
+            if (len(T) <= len(new_df[::3])):
                 print(new_df.name,' T < df')
                 Tend = T
                 end_df = new_df[::3].iloc[:len(T)]
                 print(len(Tend),len(end_df))
-            elif (len(T) > len(new_df[::3])) == True:
+            elif (len(T) > len(new_df[::3])):
                 print(new_df.name,' T > df')
                 Tend = T[:len(new_df[::3])]
                 end_df = new_df[::3]
@@ -286,12 +288,12 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                 xnew = np.linspace(Tend[0],Tend[len(Tend)-1],300) #300 represents number of points to make between T.min and T.max
                 f2 = interp1d(Tend,end_df,kind='cubic')
                 ax2.plot(xnew,f2(xnew),label="Qualitative ", c='c')
+                #plt.scatter(Tend,end_df,label="Qualitative",c='r')
                 for b in bands:
                     s,e =bands_select([b]) 
                     for j in columns_names_bands[s:e]:
                         f1 = interp1d(Tend,df_bands_end[j].iloc[:len(Tend)],kind='cubic')
                         ax1.plot(xnew,f1(xnew),label=j)
-                        #ax2.plot(Tend,end_df,label="Qualitative",c='g')
                         #ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
                         ax1.yaxis.set_label_position("right")
                         ax1.yaxis.tick_right() 
@@ -326,6 +328,8 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                     Tend = T[:len(new_df[::3])]
                     end_df = new_df[::3]
                     print(len(Tend),len(end_df))
+                else:
+                    Tend = T
                 for i in range(len(df_bands_end['segm'])):
                     xt.append(i)
 
