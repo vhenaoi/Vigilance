@@ -68,13 +68,13 @@ def opcion(op):
         graph_relations_and_expert(path,sheet_name,sheet_name_bands,group,bands)
 
 #Multi_Input 
-sheet_name_bands = relations_global
+sheet_name_bands = True_alpha
 #for b in Ch_Post:
 #    bands = [b]
-bands = all_bands
+bands = Ch_Post
 #for sbj in Nold:
-group = ['Marseille11_60s']
-opcion('Relations and Expert')
+group = ['Nold04']
+opcion('Reactivity')
 
 #Input
 '''sheet_name_bands = True_alpha

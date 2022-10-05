@@ -140,23 +140,32 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
 
 def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
     Time = np.arange(0, 45, 0.5)
+    size = 10
     df_bands_end = subject.iloc[:, 1:]
     df_bands_end.dropna(how='all', axis=1, inplace=True)
-    color = ['b','r']
+    color = ['b','c']
+    #color = ['b','r']
     for c,j in enumerate(df_bands_end):
         print(c)
         #print(j)
         xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
         f = interp1d(Time,df_bands_end[j],kind='cubic')
         plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        p1 = np.where((xnew >= 6) & (xnew <= 15))
+        maxValue1 = np.max(f(xnew)[p1[0]])
+        p2 = np.where(f(xnew) == maxValue1)
+        maxValue2 = xnew[p2[0]][0]
+        plt.annotate(str(np.round(maxValue2, 2)), (maxValue2,maxValue1),color='r')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         plt.xlabel("Frequency [Hz]",fontsize=size)
         plt.ylabel("Absolute power",fontsize=size)
         #plt.xticks(Time, ticks[:])
         plt.xlim(6,15)
+        plt.title(title)
         #plt.ylim(0,16)
-        plt.legend(borderaxespad=0,fontsize=size,loc='upper center',ncol=4,bbox_to_anchor=(0.5, 1.05))  
+        plt.legend(borderaxespad=0,fontsize=size,loc='upper center',ncol=4,bbox_to_anchor=(0.5, 0.98))  
         plt.grid()
+        
 
 def expert(df,path_bands,group,legend,tren,size,title,c):
     ticks = ('R','N3','N2','N1','D','A')
@@ -199,9 +208,9 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
     if len(subject) != 0:
         if bands == ['EC','EO']:
             if c == None:
-                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size)
+                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size,title=title)
             else:
-                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size,title=title)
         elif bands == ['EO','C3','Cz','C4','P3','Pz','P4','O1','O2']:
             if c == None:
                 if title == 'Vigilance3minEC_Rest1minEO':
@@ -212,8 +221,9 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
                         m+=2
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_reactivity(new_subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size)
+                        iter_reactivity(new_subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size,title=title)
                         n+=2
+                        plt.title(title)
                         
             else:
                 if title == 'Vigilance3minEC_Rest1minEO':
@@ -224,9 +234,10 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
                         m+=2
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_reactivity(new_subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+                        iter_reactivity(new_subject,bands,columns_names_bands,c[col],sbj_group,size=size,title=title)
                         plt.grid()
                         plt.show()
+                        plt.title(title)
                         n+=2                  
         else:
             if c == None:
