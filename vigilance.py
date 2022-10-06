@@ -140,23 +140,32 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
 
 def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
     Time = np.arange(0, 45, 0.5)
+    size = 10
     df_bands_end = subject.iloc[:, 1:]
     df_bands_end.dropna(how='all', axis=1, inplace=True)
-    color = ['b','r']
+    color = ['b','c']
+    #color = ['b','r']
     for c,j in enumerate(df_bands_end):
         print(c)
         #print(j)
         xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
         f = interp1d(Time,df_bands_end[j],kind='cubic')
         plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        p1 = np.where((xnew >= 6) & (xnew <= 15))
+        maxValue1 = np.max(f(xnew)[p1[0]])
+        p2 = np.where(f(xnew) == maxValue1)
+        maxValue2 = xnew[p2[0]][0]
+        plt.annotate(str(np.round(maxValue2, 2)), (maxValue2,maxValue1),color='r')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         plt.xlabel("Frequency [Hz]",fontsize=size)
         plt.ylabel("Absolute power",fontsize=size)
         #plt.xticks(Time, ticks[:])
         plt.xlim(6,15)
+        plt.title(title)
         #plt.ylim(0,16)
-        plt.legend(borderaxespad=0,fontsize=size,loc='upper center',ncol=4,bbox_to_anchor=(0.5, 1.05))  
+        plt.legend(borderaxespad=0,fontsize=size,loc='upper center',ncol=4,bbox_to_anchor=(0.5, 0.98))  
         plt.grid()
+        
 
 def expert(df,path_bands,group,legend,tren,size,title,c):
     ticks = ('R','N3','N2','N1','D','A')
@@ -199,9 +208,9 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
     if len(subject) != 0:
         if bands == ['EC','EO']:
             if c == None:
-                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size)
+                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size,title=title)
             else:
-                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,size=size,title=title)
         elif bands == ['EO','C3','Cz','C4','P3','Pz','P4','O1','O2']:
             if c == None:
                 if title == 'Vigilance3minEC_Rest1minEO':
@@ -212,8 +221,9 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
                         m+=2
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_reactivity(new_subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size)
+                        iter_reactivity(new_subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size,title=title)
                         n+=2
+                        plt.title(title)
                         
             else:
                 if title == 'Vigilance3minEC_Rest1minEO':
@@ -224,9 +234,10 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
                         m+=2
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_reactivity(new_subject,bands,columns_names_bands,c[col],sbj_group,size=size)
+                        iter_reactivity(new_subject,bands,columns_names_bands,c[col],sbj_group,size=size,title=title)
                         plt.grid()
                         plt.show()
+                        plt.title(title)
                         n+=2                  
         else:
             if c == None:
@@ -252,65 +263,62 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
     plt.grid()
     plt.show()
 '''
-def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_bands=None,size=None,title=None):
+def expert_relations(df,group,columns_names_bands,col,legend,tren,df_bands,size=None,title=None):
     df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
     df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])
     if group != None:
         colums = group
     else:
         colums = df_bands['sbj'].unique()
-    if len(bands) != 1:
-        for col in range(len(colums)):
-            subject=df[colums[col]]  
-            if subject.name == 'Nold01':
-                print('NOLD01')    
-            new_df = subject.dropna()
-            sub = df_bands[df_bands['sbj']==subject.name]
-            T,df_bands_end,ticks_ax1 = selectxy(sub)
-            xt = []
-            if (len(T) <= len(new_df[::3])):
-                print(new_df.name,' T < df')
-                Tend = T
-                end_df = new_df[::3].iloc[:len(T)]
-                print(len(Tend),len(end_df))
-            elif (len(T) > len(new_df[::3])):
-                print(new_df.name,' T > df')
-                Tend = T[:len(new_df[::3])]
-                end_df = new_df[::3]
-                print(len(Tend),len(end_df))
-            for i in range(len(df_bands_end['segm'])):
-                xt.append(i)
-            fig = plt.figure()
-            ax1 = fig.add_subplot(111)
-            ax2 = ax1.twinx()
-            ticks_ax2 = ('R','N3','N2','N1','D','A',' ')
-            if len(Tend) == len(end_df):
-                xnew = np.linspace(Tend[0],Tend[len(Tend)-1],300) #300 represents number of points to make between T.min and T.max
-                f2 = interp1d(Tend,end_df,kind='cubic')
-                ax2.plot(xnew,f2(xnew),label="Qualitative ", c='c')
-                #plt.scatter(Tend,end_df,label="Qualitative",c='r')
-                for b in bands:
-                    s,e =bands_select([b]) 
-                    for j in columns_names_bands[s:e]:
-                        f1 = interp1d(Tend,df_bands_end[j].iloc[:len(Tend)],kind='cubic')
-                        ax1.plot(xnew,f1(xnew),label=j)
-                        #ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
-                        ax1.yaxis.set_label_position("right")
-                        ax1.yaxis.tick_right() 
-                        ax2.yaxis.set_label_position("left")
-                        ax2.yaxis.tick_left()
-                        ax2.set_ylim([-1,5])
-                        ax2.set_yticklabels(ticks_ax2)
-                        ax1.set_xticks(np.array(xt))
-                        ax1.set_xticklabels(list(df_bands_end['segm']))
-                        ax2.set_ylabel("Qualitative")
-                        ax1.set_ylabel("Quantitative")
-                fig.legend(borderaxespad=0,fontsize=10,loc='upper left',ncol=2,bbox_to_anchor=(0.5, 1.0))
-                plt.title(title + ' ' +subject.name,loc='left')
-                plt.grid()
-                plt.show() 
+    if len(columns_names_bands[2:]) != 1:
+        subject=df[colums[col]]  
+        sub = df_bands[df_bands['sbj']==subject.name]
+        T,df_bands_end,ticks_ax1 = selectxy(sub)
+        new_df = subject.dropna()
+        xt = []
+        if (len(T) <= len(new_df[::3])):
+            print(new_df.name,' T < df')
+            Tend = T
+            end_df = new_df[::3].iloc[:len(T)]
+            print(len(Tend),len(end_df))
+        elif (len(T) > len(new_df[::3])):
+            print(new_df.name,' T > df')
+            Tend = T[:len(new_df[::3])]
+            end_df = new_df[::3]
+            print(len(Tend),len(end_df))
+        for i in range(len(df_bands_end['segm'])):
+            xt.append(i)
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        ax2 = ax1.twinx()
+        ticks_ax2 = ('R','N3','N2','N1','D','A',' ')
+        if len(Tend) == len(end_df):
+            xnew = np.linspace(Tend[0],Tend[len(Tend)-1],300) #300 represents number of points to make between T.min and T.max
+            f2 = interp1d(Tend,end_df,kind='cubic')
+            ax2.plot(xnew,f2(xnew),label="Qualitative ", c='k')
+            #plt.scatter(Tend,end_df,label="Qualitative",c='r')
+            for b in columns_names_bands[2:]:
+                s,e =bands_select([b]) 
+                for j in columns_names_bands[s:e]:
+                    f1 = interp1d(Tend,df_bands_end[j].iloc[:len(Tend)],kind='cubic')
+                    ax1.plot(xnew,f1(xnew),label=j)
+                    #ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
+                    ax1.yaxis.set_label_position("right")
+                    ax1.yaxis.tick_right() 
+                    ax2.yaxis.set_label_position("left")
+                    ax2.yaxis.tick_left()
+                    ax2.set_ylim([-1,5])
+                    ax2.set_yticklabels(ticks_ax2)
+                    ax1.set_xticks(np.array(xt))
+                    ax1.set_xticklabels(list(df_bands_end['segm']))
+                    ax2.set_ylabel("Qualitative")
+                    ax1.set_ylabel("Quantitative")
+            fig.legend(borderaxespad=0,fontsize=10,loc='upper left',ncol=2,bbox_to_anchor=(0.5, 1.0))
+            plt.title(title + ' ' +subject.name,loc='left')
+            plt.grid()
+            plt.show() 
     else:
-        s,e =bands_select(bands)
+        s,e =bands_select(columns_names_bands[2:])
         for j in columns_names_bands[s:e]:
             for col in range(len(colums)):
                 subject=df[colums[col]]      
@@ -341,7 +349,7 @@ def expert_relations(df,bands,columns_names_bands,legend,tren,group=None,df_band
                     xnew = np.linspace(Tend[0],Tend[len(Tend)-1],300) #300 represents number of points to make between T.min and T.max
                     f1 = interp1d(Tend,df_bands_end[j].iloc[:len(Tend)],kind='cubic')
                     f2 = interp1d(Tend,end_df,kind='cubic')
-                    ax2.plot(xnew,f1(xnew),label="Qualitative"+j,c='g')
+                    ax2.plot(xnew,f1(xnew),label="Qualitative",c='k')
                     ax1.plot(xnew,f2(xnew),label="Quantitative"+j,c='c')
                     #ax2.plot(Tend,end_df,label="Qualitative",c='g')
                     #ax1.plot(Tend,df_bands_end[j].iloc[:len(Tend)],label="Quantitative",c='c')
@@ -471,12 +479,12 @@ def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot
             print(colums[col])   
             if group != None:
                 if status == 'Relations and Expert':
-                    expert_relations(df,bands,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                
+                    expert_relations(df,group,columns_names_bands,col,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                
                 else:
                     group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c,title)   
             elif group == None:
                 if status == 'Relations and Expert':
-                    expert_relations(df,bands,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                   
+                    expert_relations(df,group,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title)                   
                 #else:
                 #    group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title)            
             else:
