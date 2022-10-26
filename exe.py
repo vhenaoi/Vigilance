@@ -102,13 +102,13 @@ opcion('Reactivity')'''
 #sheet_name_bands = relations_1ch
 #sheet_name_bands = sbj_post
 #sheet_name_bands = relations_post
-sheet_name_bands = sbj_global
-##sheet_name_bands = reactivity_post
+#sheet_name_bands = sbj_global
+sheet_name_bands = reactivity_post
 #bands = ['alpha_1ch','alpha2_1ch']
 #bands = all_bands
-bands = ['alpha','alpha2']
-##bands = reactivity
-group = ['Nold10']
-opcion('Relations and Expert')
+#bands = ['alpha','alpha2']
+bands = reactivity
+group = ['Nold14']
+#opcion('Relations and Expert')
 #opcion('Individual bands')
-##opcion('Reactivity')
+opcion('Reactivity')
