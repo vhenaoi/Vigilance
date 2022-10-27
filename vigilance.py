@@ -174,7 +174,7 @@ def iter_reactivity(subject,c=None,sbj_group=None,tren=None,status=None,ticks=No
         plt.legend(borderaxespad=0,fontsize=size,ncol=4,bbox_to_anchor=(0.5, 0.98))  
         plt.grid()
         
-def iter_WDN1(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,path_bands=None,title=None,size=None):
+def iter_WDN1(subject,title=None,size=None):
     Time = np.arange(0, 45, 0.5)
     df_bands_end = subject.iloc[:, 1:]
     df_bands_end.dropna(how='all', axis=1, inplace=True)
@@ -192,26 +192,27 @@ def iter_WDN1(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,pat
         plt.annotate(' '+str(np.round(maxValue2, 2)), (maxValue2,maxValue1),color='black',size=10,weight='bold')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
-    IAFW = 8.5
+    IAFW = 10
     IAFD = 9
+    A=150
     #IAFN1 = 5
     s_annotate = 10
     plt.xlabel("Frequency [Hz]",fontsize=size)
     plt.ylabel("Absolute power",fontsize=size)
     plt.axvline(x = 10, color = 'k',linestyle=':')
-    plt.annotate(' 10 Hz', (10,50),color='black',size=s_annotate)
+    #plt.annotate(' 10 Hz', (10,A),color='black',size=s_annotate)
     plt.axvline(x = 2, color = 'green',linestyle=':')
-    plt.annotate(' 2 Hz', (2,50),color='black',size=s_annotate)
+    plt.annotate(' 2 Hz', (2,A),color='black',size=s_annotate)
     plt.axvline(x = 3, color = 'green',linestyle=':')
-    plt.annotate(' 3 Hz', (3,50),color='black',size=s_annotate)
+    plt.annotate(' 3 Hz', (3,A),color='black',size=s_annotate)
 
     #plt.axvline(x = IAFW-2, color = 'teal', linestyle=':')
     #plt.annotate(' Wake IAF-2Hz', (IAFW-2,50),color='black',size=s_annotate)
     plt.axvline(x = IAFW, color = 'maroon',linestyle=':')
-    plt.annotate(' Wake IAF', (IAFW,50),color='black',size=s_annotate)
+    plt.annotate(' Wake IAF', (IAFW,A),color='black',size=s_annotate)
 
     plt.axvline(x = IAFD-2, color = 'lightseagreen', linestyle=':')
-    plt.annotate(' Drows IAF-2Hz', (IAFD-2,50),color='black',size=s_annotate)
+    plt.annotate(' Drows IAF-2Hz', (IAFD-2,A),color='black',size=s_annotate)
     #plt.axvline(x = IAFD, color = 'firebrick',linestyle=':')
     #plt.annotate(' Drows IAF', (IAFD,0),color='black',size=s_annotate)
 
@@ -224,7 +225,7 @@ def iter_WDN1(subject,c=None,sbj_group=None,tren=None,status=None,ticks=None,pat
     #plt.xticks(Time, ticks[:])
     plt.xlim(1,20)
     plt.title(title, loc='right')
-    plt.ylim(0,50)
+    plt.ylim(0,A)
     plt.legend(borderaxespad=0,fontsize=10,ncol=4,bbox_to_anchor=(0.5, 0.98))  
     plt.grid()
     plt.show()
@@ -302,65 +303,65 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
             plt.show()
             plt.title(title)
                         
-        elif bands == ['W','D','N1']:
+        elif bands == ['Wakefulness','Ripples','Diffuse Theta']:
             if c == None:
                 if title == 'WDN1':
                     s=subject.drop(['sbj'], axis=1)
                     n=0
                     m=0
                     for p in range(int(len(subject.columns)/2)):
-                        m+=3
+                        m+=5
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_WDN1(new_subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,size=size,title=title)
-                        n+=3
+                        iter_WDN1(subject=new_subject)
+                        n+=5
             else:
                 if title == 'WDN1':
                     s=subject.drop(['sbj'], axis=1)
                     n=0
                     m=0
                     for p in range(int(len(subject.columns)/2)):
-                        m+=3
+                        m+=5
                         new_subject = s.iloc[:,n:m]
                         new_subject.insert(loc=0, column='sbj', value=subject.sbj)
-                        iter_WDN1(new_subject,bands,columns_names_bands,c[col],sbj_group,size=size,title=title)
-                        n+=3  
-#            #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
-#            IAFW = 8.5
-#            IAFD = 9
-#            #IAFN1 = 5
-#            s_annotate = 10
-#            plt.xlabel("Frequency [Hz]",fontsize=size)
-#            plt.ylabel("Absolute power",fontsize=size)
-#            plt.axvline(x = 10, color = 'k',linestyle=':')
-#            plt.annotate(' 10 Hz', (10,50),color='black',size=s_annotate)
-#            plt.axvline(x = 2, color = 'green',linestyle=':')
-#            plt.annotate(' 2 Hz', (2,50),color='black',size=s_annotate)
-#            plt.axvline(x = 3, color = 'green',linestyle=':')
-#            plt.annotate(' 3 Hz', (3,50),color='black',size=s_annotate)
-#
-#            #plt.axvline(x = IAFW-2, color = 'teal', linestyle=':')
-#            #plt.annotate(' Wake IAF-2Hz', (IAFW-2,50),color='black',size=s_annotate)
-#            plt.axvline(x = IAFW, color = 'maroon',linestyle=':')
-#            plt.annotate(' Wake IAF', (IAFW,50),color='black',size=s_annotate)
-#
-#            plt.axvline(x = IAFD-2, color = 'lightseagreen', linestyle=':')
-#            plt.annotate(' Drows IAF-2Hz', (IAFD-2,50),color='black',size=s_annotate)
-#            #plt.axvline(x = IAFD, color = 'firebrick',linestyle=':')
-#            #plt.annotate(' Drows IAF', (IAFD,0),color='black',size=s_annotate)
-#
-#            #plt.axvline(x = IAFN1-2, color = 'mediumaquamarine', linestyle=':')
-#            #plt.annotate('Sleep IAF-2Hz', (IAFN1-2,50),color='black',size=s_annotate)
-#            #plt.axvline(x = IAFN1, color = 'indianred',linestyle=':')
-#            #plt.annotate('Sleep IAF', (IAFN1,50),color='black',size=s_annotate)
-#
-#
-#            #plt.xticks(Time, ticks[:])
-#            plt.xlim(1,20)
-#            plt.title(title, loc='right')
-#            plt.ylim(0,50)
-#            plt.legend(borderaxespad=0,fontsize=10,ncol=4,bbox_to_anchor=(0.5, 0.98))  
-#            plt.grid()
+                        iter_WDN1(subject=new_subject)
+                        n+=5  
+           #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+            # IAFW = 8.5
+            # IAFD = 9
+            # #IAFN1 = 5
+            # s_annotate = 10
+            # plt.xlabel("Frequency [Hz]",fontsize=size)
+            # plt.ylabel("Absolute power",fontsize=size)
+            # plt.axvline(x = 10, color = 'k',linestyle=':')
+            # plt.annotate(' 10 Hz', (10,50),color='black',size=s_annotate)
+            # plt.axvline(x = 2, color = 'green',linestyle=':')
+            # plt.annotate(' 2 Hz', (2,50),color='black',size=s_annotate)
+            # plt.axvline(x = 3, color = 'green',linestyle=':')
+            # plt.annotate(' 3 Hz', (3,50),color='black',size=s_annotate)
+
+            # #plt.axvline(x = IAFW-2, color = 'teal', linestyle=':')
+            # #plt.annotate(' Wake IAF-2Hz', (IAFW-2,50),color='black',size=s_annotate)
+            # plt.axvline(x = IAFW, color = 'maroon',linestyle=':')
+            # plt.annotate(' Wake IAF', (IAFW,50),color='black',size=s_annotate)
+
+            # plt.axvline(x = IAFD-2, color = 'lightseagreen', linestyle=':')
+            # plt.annotate(' Drows IAF-2Hz', (IAFD-2,50),color='black',size=s_annotate)
+            # #plt.axvline(x = IAFD, color = 'firebrick',linestyle=':')
+            # #plt.annotate(' Drows IAF', (IAFD,0),color='black',size=s_annotate)
+
+            # #plt.axvline(x = IAFN1-2, color = 'mediumaquamarine', linestyle=':')
+            # #plt.annotate('Sleep IAF-2Hz', (IAFN1-2,50),color='black',size=s_annotate)
+            # #plt.axvline(x = IAFN1, color = 'indianred',linestyle=':')
+            # #plt.annotate('Sleep IAF', (IAFN1,50),color='black',size=s_annotate)
+
+
+            # #plt.xticks(Time, ticks[:])
+            # #plt.xlim(1,20)
+            # plt.title(title, loc='right')
+            # #plt.ylim(0,50)
+            # plt.legend(borderaxespad=0,fontsize=10,ncol=4,bbox_to_anchor=(0.5, 0.98))  
+            # plt.grid()
                                     
         else:
             if c == None:
@@ -368,24 +369,24 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
             else:
                 iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
 
-'''def group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title):
-    subject=mask(df_bands,colums[col])
-    sbj_group = colums[col]
-    if len(subject) != 0:
-        if bands == ['EC','EO']:
-            if c == None:
-                iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,title=title,size=size)
-            else:
-                iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,title=title,size=size)
-        else:
-            if c == None:
-                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=None,sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
-            else:    
-                iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
+# def group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title):
+#     subject=mask(df_bands,colums[col])
+#     sbj_group = colums[col]
+#     if len(subject) != 0:
+#         if bands == ['EC','EO']:
+#             if c == None:
+#                 iter_reactivity(subject,bands,columns_names_bands,c=None,sbj_group=sbj_group,title=title,size=size)
+#             else:
+#                 iter_reactivity(subject,bands,columns_names_bands,c[col],sbj_group,title=title,size=size)
+#         else:
+#             if c == None:
+#                 iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=None,sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
+#             else:    
+#                 iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)    
 
-    plt.grid()
-    plt.show()
-'''
+#     plt.grid()
+#     plt.show()
+
 def expert_relations(df,group,columns_names_bands,col,legend,tren,df_bands,size=None,title=None,bands=None):
     df_group = pd.DataFrame(group,columns=[columns_names_bands[0]])
     df_group = pd.merge(df_group, df_bands, on=columns_names_bands[0])

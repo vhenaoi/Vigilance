@@ -29,7 +29,7 @@ all_bands = ['alpha/deltatheta','alpha/theta','alpha/delta']
 
 reactivity =  ['EC','EO']
 Ch_Post = ['EO','C3','Cz','C4','P3','Pz','P4','O1','O2']
-BandsWDN1 = ['W','D','N1']
+BandsWDN1 = ['Wakefulness','Ripples','Diffuse Theta']
 
 #bands ind - sheet_name_bands: Individual bands
 alpha = ['alpha','alpha2']
@@ -77,18 +77,18 @@ def opcion(op):
 #sheet_name_bands = True_alpha
 ##sheet_name_bands = reactivity_global
 #sheet_name_bands = rest_alpha
-#sheet_name_bands = WDN1
+sheet_name_bands = WDN1
 ##sheet_name_bands = sbj_post
 ###for b in alpha:
 ###    bands = [b]
 ###bands = Ch_Post
-#bands = BandsWDN1
+bands = BandsWDN1
 ##bands = all_ind_bands
 ##m=['Nold09','Nold10','Nold11','Nold12','Nold13','Nold14']
 ##for sbj in m:
-#group = ['Nold09']
+group = ['Nold11']
 #opcion('Reactivity')
-##opcion('Individual bands')
+opcion('Individual bands')
 
 
 #Input
@@ -103,12 +103,12 @@ opcion('Reactivity')'''
 #sheet_name_bands = sbj_post
 #sheet_name_bands = relations_post
 #sheet_name_bands = sbj_global
-sheet_name_bands = reactivity_post
+#sheet_name_bands = reactivity_post
 #bands = ['alpha_1ch','alpha2_1ch']
 #bands = all_bands
 #bands = ['alpha','alpha2']
-bands = reactivity
-group = ['Nold14']
+#bands = reactivity
+#group = ['Nold14']
 #opcion('Relations and Expert')
 #opcion('Individual bands')
-opcion('Reactivity')
+#opcion('Reactivity')
