@@ -2,5 +2,5 @@
 
 import mne
 
-path_raw = r'D:\Veronica\Data\01_NOLD\Nold 6\HealthyControl019.vhdr'
-raw = mne.io.read_raw_brainvision(path_raw,preload=True)
+path_raw = r"C:\Users\veroh\Downloads\Nold 11 Vigilance 61 ch.edf"
+raw = mne.io.read_raw(path_raw,preload=True)
