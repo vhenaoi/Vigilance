@@ -80,6 +80,8 @@ def _verf_bands(bands):
         bands = ['Fp1-F7','F7-T7','T7-P7','P7-O1','Fp2-F8','F8-T8','T8-P8','Fp1-F3','F3-C3','C3-P3','P3-O1','Fp2-F4','F4-C4','C4-P4','P4-O2','Fz-Cz','Cz-Pz']        
     if bands == 'alpha':
         bands = ['alpha','alpha2']
+    if bands == 'alpha_1ch':
+        bands = ['alpha_1ch','alpha2_1ch']
     if bands == 'alpha2':
         bands = ['alpha2']
     if bands == 'delta':

@@ -134,8 +134,6 @@ def graph_bands(subject,columns_names_bands,s,e,path_bands,legend,tren,size,c,ti
             plt.ylabel("",fontsize=size)
             plt.xticks(Time, ticks[:-1])
             plt.xlim(0,len(Time))
-            plt.ylim([1**-10, 1**11])
-            plt.yscale('log')
             plt.title('Quantitative EEG analysis '+str(title),fontsize=size,loc='left')
             plt.grid('On') 
         else:
@@ -588,8 +586,10 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
                                     
         else:
             if c == None:
+                plt.figure()
                 iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=None,sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
             else:
+                plt.figure()
                 iter_sbj(subject,bands=bands,columns_names_bands=columns_names_bands,c=c[col],sbj_group=sbj_group,legend=legend,tren=tren,status=None,ticks=None,path_bands=path_bands,title=title,size=size)
 
 # def group_none(df_bands,colums,col,bands,columns_names_bands,tren,legend,path_bands,size,c,title):
@@ -849,8 +849,11 @@ def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot
             if status == 'Relations and Expert':
                 expert_relations(df,group,columns_names_bands,col,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title,bands=bands)                
             else:
-                for col in range(len(columns_names_bands)):
-                    group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c,title)   
+                for col in range(len(colums)):
+                    try:
+                        group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,path_bands,size,c,title)   
+                    except:
+                        pass
         elif group == None:
             if status == 'Relations and Expert':
                 expert_relations(df,group,columns_names_bands,legend=legend,tren=tren,df_bands=df_bands,size=size,title=title,bands=bands)                   
