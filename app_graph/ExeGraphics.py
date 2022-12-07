@@ -43,8 +43,7 @@ class App_Gui(QWidget):
         self.label_sheet = QLabel('Excel sheet name')
         # creamos un desplegable
         self.txt_sheet = QComboBox()
-        self.txt_sheet.addItems(["SBJ Post", "SBJ Global","SBJ 1ch","Reactivity Post","Reactivity Global","WDN1","WDN","WRD","Vertex","Relations Post","Relations Global","Relations 1ch","Qualitative"])
-
+        self.txt_sheet.addItems(["SBJ Post", "SBJ Global","SBJ 1ch","Reactivity Post","Reactivity Global","WDN1","WDN","WRD","Vertex","Relations Post","Relations Global","Relations 1ch","Qualitative","True_alpha","Rest_alpha"])
         self.label_bands = QLabel('Bands name')
         self.txt_bands = QComboBox()
         self.txt_bands.addItems(["alpha_theta", "alpha_deltatheta", "alpha_delta","alpha_theta","all_bands","reactivity","Ch_Post","BandsWDN1","BandsWDN","BandsWRD","Bipolar","alpha","alpha_1ch","alpha2","delta","theta","deltatheta","beta","gamma","all_ind_bands","Qualitative"])

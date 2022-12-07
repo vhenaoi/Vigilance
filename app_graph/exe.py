@@ -102,6 +102,12 @@ def _verf_bands(bands):
 def run_exe(sheet_name_bands,bands,group,graphics_name):
     group=[group.strip()]
     bands = _verf_bands(bands)
+    if sheet_name_bands == 'True_alpha':
+        sheet_name_bands = 'Vigilance3minEC_Rest1minEO'
+    elif sheet_name_bands == 'Rest_alpha':
+         sheet_name_bands = 'Rest3minEC_Rest1minEO'
+    else:
+        sheet_name_bands = sheet_name_bands
     opcion(graphics_name,sheet_name_bands,bands,group)
 
 
