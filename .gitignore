@@ -1,6 +1,8 @@
 # Binaries for programs and plugins
 *.exe
 *.exe~
+*.spec
+*.exe.manifest
 *.dll
 # Dependency directories
 Vigilance/__pycache__
