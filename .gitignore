@@ -1,4 +1,8 @@
-# ignore
-Vigilance\__pycache__
-Vigilance\app_graph
-Vigilance\app_graph\__main__.spec
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+# Dependency directories
+Vigilance/__pycache__
+Vigilance/app_graph
+Vigilance/app_graph/__main__.spec
