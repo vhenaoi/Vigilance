@@ -10,10 +10,11 @@ class Graphics():
     def input(self):
         return self.parameters[self.initial]
     
-    def graph(self,txt_sheetValue,txt_bands,txt_group,txt_graphicsValue):
+    def graph(self,txt_subValue,txt_sheetValue,txt_bands,txt_group,txt_graphicsValue):
+        print(txt_subValue)
         print(txt_sheetValue)
         print(txt_bands)
         print(txt_group)
         print(txt_graphicsValue)
-        run_exe(txt_sheetValue,txt_bands,txt_group,txt_graphicsValue)
+        run_exe(txt_subValue,txt_sheetValue,txt_bands,txt_group,txt_graphicsValue)
         

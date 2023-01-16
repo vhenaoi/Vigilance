@@ -101,10 +101,10 @@ def mask(dataframe,sbj):
     name=dataframe[name_mask]
     return name
 
-def select_color(path,sheet_name):
+def select_color(num,path,sheet_name):
     df = pd.read_excel(path,sheet_name=sheet_name)
     columns_names = df.columns.values
-    col = columns_names[1:35]
+    col = columns_names[1:(num+1)]
     color_col = []
 
     for c in col:
@@ -817,10 +817,10 @@ def base(new_df,Time,legend=None,tren=None,i=None,c=None,sbj=None,size=None):
 
 
 
-def graphic(path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot, bands,status,group,title,c):
+def graphic(num,path,sheet_name,path_bands,sheet_name_bands,size, legend, tren, plot, bands,status,group,title,c):
     df = pd.read_excel(path,sheet_name=sheet_name)
     columns_names = df.columns.values
-    colums = columns_names[1:35]
+    colums = columns_names[1:(num+1)]
     #c=select_color(colums)
 
     if path_bands != None:

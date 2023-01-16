@@ -44,17 +44,17 @@ relations_1ch = 'Relations 1ch'
 path=os.getcwd()+r'\files\Sleep.xlsx'
 sheet_name="Grafico"
 
-def opcion(op,sheet_name_bands,bands,group):
+def opcion(num,op,sheet_name_bands,bands,group):
     if op == 'Individual bands':
-        graph_individual(path,sheet_name,sheet_name_bands,bands,group)
+        graph_individual(num,path,sheet_name,sheet_name_bands,bands,group)
     #elif op == 'Relations':
         #graph_relations(path,sheet_name,sheet_name_bands,group,bands)
     elif op == 'Qualitative':
-        graph_expert(path,sheet_name,sheet_name_bands,bands,group)
+        graph_expert(num,path,sheet_name,sheet_name_bands,bands,group)
     elif op == 'Reactivity':
-        graph_reactivity(path,sheet_name,sheet_name_bands,bands,group)
+        graph_reactivity(num,path,sheet_name,sheet_name_bands,bands,group)
     elif op == 'Quantitative and Qualitative':
-        graph_relations_and_expert(path,sheet_name,sheet_name_bands,bands,group)
+        graph_relations_and_expert(num,path,sheet_name,sheet_name_bands,bands,group)
 
 def _verf_bands(bands):
     #bands - sheet_name_bands: Relations
@@ -99,7 +99,7 @@ def _verf_bands(bands):
     return bands
 
 ##Multi_Input 
-def run_exe(sheet_name_bands,bands,group,graphics_name):
+def run_exe(num,sheet_name_bands,bands,group,graphics_name):
     group=[group.strip()]
     bands = _verf_bands(bands)
     if sheet_name_bands == 'True_alpha':
@@ -108,7 +108,7 @@ def run_exe(sheet_name_bands,bands,group,graphics_name):
          sheet_name_bands = 'Rest3minEC_Rest1minEO'
     else:
         sheet_name_bands = sheet_name_bands
-    opcion(graphics_name,sheet_name_bands,bands,group)
+    opcion(int(num),graphics_name,sheet_name_bands,bands,group)
 
 
 #sheet_name_bands = True_alpha

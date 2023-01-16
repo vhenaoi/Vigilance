@@ -20,6 +20,7 @@ class App_Gui(QWidget):
 
     def update_parameters(self):
         initial = self.logic.input()
+        self.txt_sub.setText("")
         self.txt_sheet.setCurrentText(initial["Excel sheet name"])
         self.txt_bands.setCurrentText(initial["Bands name"])
         self.txt_group.setText(initial["Subject name"])
@@ -27,17 +28,21 @@ class App_Gui(QWidget):
 
     
     def update_graphics(self):
+        txt_subValue = self.txt_sub.text() 
         txt_sheetValue = self.txt_sheet.currentText() 
         txt_bandsValue = self.txt_bands.currentText() 
         txt_groupValue = self.txt_group.text() 
         txt_graphicsValue = self.txt_graphics.currentText() 
-        self.logic.graph(txt_sheetValue,txt_bandsValue,txt_groupValue,txt_graphicsValue)
+        self.logic.graph(txt_subValue,txt_sheetValue,txt_bandsValue,txt_groupValue,txt_graphicsValue)
     
     def GUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         #Creamos el distribuidor gráfico principal
         self.distr_vertical = QVBoxLayout()
+
+        self.label_sub = QLabel('Number of Subjects')
+        self.txt_sub = QLineEdit()
 
         #Creamos las etiquetas y campos de texto de la materia la caja de materias
         self.label_sheet = QLabel('Excel sheet name')
@@ -75,16 +80,18 @@ class App_Gui(QWidget):
         self.setLayout(self.distr_vertical)
         
         #Agregamos a la caja de materias las etiquetas
-        distr_box.addWidget(self.label_sheet, 0,0)
-        distr_box.addWidget(self.label_bands, 1,0)
-        distr_box.addWidget(self.label_group, 2,0)
-        distr_box.addWidget(self.label_graphics, 3,0)
+        distr_box.addWidget(self.label_sub, 0,0)
+        distr_box.addWidget(self.label_sheet, 1,0)
+        distr_box.addWidget(self.label_bands, 2,0)
+        distr_box.addWidget(self.label_group, 3,0)
+        distr_box.addWidget(self.label_graphics, 4,0)
 
         #Agregamos a la caja de materias los campos de texto
-        distr_box.addWidget(self.txt_sheet, 0,1)
-        distr_box.addWidget(self.txt_bands, 1,1)
-        distr_box.addWidget(self.txt_group, 2,1)
-        distr_box.addWidget(self.txt_graphics, 3,1)
+        distr_box.addWidget(self.txt_sub, 0,1)
+        distr_box.addWidget(self.txt_sheet, 1,1)
+        distr_box.addWidget(self.txt_bands, 2,1)
+        distr_box.addWidget(self.txt_group, 3,1)
+        distr_box.addWidget(self.txt_graphics, 4,1)
         
         #Creamos los botones para la caja de botones
         self.ok = QPushButton("Ok")
