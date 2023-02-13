@@ -4,7 +4,7 @@ class Graphics():
  
     def __init__(self):
         self.parameters = []
-        self.parameters.append({"Excel sheet name":" ","Bands name":" ", "Subject name":" ", "Graphics name":" "})
+        self.parameters.append({"Excel sheet name":" ","Bands name or Channels name":" ", "Subject name":" ", "Graphics name":" "})
         self.initial = 0
     
     def input(self):

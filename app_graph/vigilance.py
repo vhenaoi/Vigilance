@@ -179,17 +179,19 @@ def iter_WDN1(subject,title=None,size=None):
     color = ['maroon','lightseagreen','green','blue','orange','red']
     markers = ['o','^','s','*','8','2']
     for c,j in enumerate(df_bands_end):
-        xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
-        f = interp1d(Time,df_bands_end[j],kind='cubic')
-        plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
-        plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
-        p1 = np.where((xnew >= 6) & (xnew <= 15))
-        maxValue1 = np.max(f(xnew)[p1[0]])
-        p2 = np.where(f(xnew) == maxValue1)
-        maxValue2 = xnew[p2[0]][0]
+        #xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+        #f = interp1d(Time,df_bands_end[j],kind='cubic')
+        #plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
+        #plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        #p1 = np.where((xnew >= 6) & (xnew <= 15))
+        #maxValue1 = np.max(f(xnew)[p1[0]])
+        #p2 = np.where(f(xnew) == maxValue1)
+        #maxValue2 = xnew[p2[0]][0]
         #plt.annotate(' '+str(np.round(maxValue2, 2)), (maxValue2,maxValue1),color='black',size=10,weight='bold')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        plt.scatter(Time,df_bands_end[j],marker=markers[c],color=color[c]) 
+        plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
     IAFW = 10
     IAFD = 9
     A=1100
@@ -239,17 +241,20 @@ def iter_WDN(subject,title=None,size=None):
     color = ['maroon','lightseagreen','green','blue','orange']
     markers = ['o','^','s','*','8']
     for c,j in enumerate(df_bands_end):
-        xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
-        f = interp1d(Time,df_bands_end[j],kind='cubic')
-        plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
-        plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
-        p1 = np.where((xnew >= 6) & (xnew <= 15))
-        maxValue1 = np.max(f(xnew)[p1[0]])
-        p2 = np.where(f(xnew) == maxValue1)
-        maxValue2 = xnew[p2[0]][0]
+        ### Regression to smooth the curve 
+        #xnew = np.linspace(Time.min(),Time.max(),90) #300 represents number of points to make between T.min and T.max
+        #f = interp1d(Time,df_bands_end[j],kind='cubic')
+        #plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c]) 
+        #plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c]) 
+        #p1 = np.where((xnew >= 6) & (xnew <= 15))
+        #maxValue1 = np.max(f(xnew)[p1[0]])
+        #p2 = np.where(f(xnew) == maxValue1)
+        #maxValue2 = xnew[p2[0]][0]
         #plt.annotate(' '+str(np.round(maxValue2, 2)), (maxValue2,maxValue1),color='black',size=10,weight='bold')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        plt.scatter(Time,df_bands_end[j],marker=markers[c],color=color[c]) 
+        plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
     IAFW = 10
     IAFD = 9
     A=300
@@ -291,6 +296,7 @@ def iter_WDN(subject,title=None,size=None):
     plt.legend(borderaxespad=0,fontsize=10,ncol=6,bbox_to_anchor=(1, 1.05))  
     plt.grid('On') 
     plt.show()
+    print('aqui')
 
 def iter_WRD(subject,title=None,size=None):
     Time = np.arange(0, 45, 0.5)
@@ -300,18 +306,20 @@ def iter_WRD(subject,title=None,size=None):
     markers = ['o','^','s']
     difference = []
     for c,j in enumerate(df_bands_end):
-        xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
-        f = interp1d(Time,df_bands_end[j],kind='cubic')
-        p1 = np.where((xnew >= 6) & (xnew <= 15))
-        maxValue1 = np.max(f(xnew)[p1[0]])
-        p2 = np.where(f(xnew) == maxValue1)
-        maxValue2 = xnew[p2[0]][0]
-        difference.append(maxValue1)
-        plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
-        plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        #xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+        #f = interp1d(Time,df_bands_end[j],kind='cubic')
+        #p1 = np.where((xnew >= 6) & (xnew <= 15))
+        #maxValue1 = np.max(f(xnew)[p1[0]])
+        #p2 = np.where(f(xnew) == maxValue1)
+        #maxValue2 = xnew[p2[0]][0]
+        #difference.append(maxValue1)
+        #plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
+        #plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         #plt.annotate(' '+str(np.round(maxValue2, 2))+','+str(np.round(maxValue1, 2)), (maxValue2,maxValue1),color='black',size=10,weight='bold')
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
         #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        plt.scatter(Time,df_bands_end[j],marker=markers[c],color=color[c]) 
+        plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
     IAFW = 10
     IAFD = 9
     A=10**3
@@ -355,6 +363,70 @@ def iter_WRD(subject,title=None,size=None):
     plt.legend(borderaxespad=0,fontsize=10,ncol=6,bbox_to_anchor=(1, 1.05)) 
     plt.grid('On')
 
+def iter_Ch(subject,title=None,size=None):
+    Time = np.arange(0, 45, 0.5)
+    df_bands_end = subject.iloc[:, 1:]
+    df_bands_end.dropna(how='all', axis=1, inplace=True)
+    color = ['royalblue','darkorange','dimgray','gold']
+    markers = ['o','^','s','v']
+    difference = []
+    for c,j in enumerate(df_bands_end):
+        #xnew = np.linspace(Time.min(),Time.max(),300) #300 represents number of points to make between T.min and T.max
+        #f = interp1d(Time,df_bands_end[j],kind='cubic')
+        #p1 = np.where((xnew >= 6) & (xnew <= 15))
+        #maxValue1 = np.max(f(xnew)[p1[0]])
+        #p2 = np.where(f(xnew) == maxValue1)
+        #maxValue2 = xnew[p2[0]][0]
+        #difference.append(maxValue1)
+        #plt.scatter(xnew,f(xnew),marker=markers[c],color=color[c])
+        #plt.plot(xnew,f(xnew),label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        #plt.annotate(' '+str(np.round(maxValue2, 2))+','+str(np.round(maxValue1, 2)), (maxValue2,maxValue1),color='black',size=10,weight='bold')
+        #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        #plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+        plt.scatter(Time,df_bands_end[j],marker=markers[c],color=color[c]) 
+        plt.plot(Time,df_bands_end[j],label=subject['sbj'].iloc[0]+'_'+j,color=color[c])
+    IAFW = 10
+    IAFD = 9
+    A=10**3
+    #IAFN1 = 5
+    s_annotate = 10
+    # plt.xlabel("Frequency [Hz]",fontsize=size)
+    # plt.ylabel("Absolute power",fontsize=size)
+    plt.axvline(x = 10, color = 'k',linestyle=':')
+    plt.annotate(' 10 Hz', (10,A),color='black',size=s_annotate)
+    #plt.annotate('Wakefulness-Ripples = '+str(np.round(np.abs(difference[0]-difference[1]))),(12.5,10**3),color='red',size=s_annotate,weight='bold')
+    #plt.annotate('Diffuse Theta-Ripples = '+str(np.round(np.abs(difference[2]-difference[1]))),(15.5,10**3),color='red',size=s_annotate,weight='bold')
+    # plt.axvline(x = 2, color = 'green',linestyle=':')
+    # plt.annotate(' 2 Hz', (2,A),color='black',size=s_annotate)
+    # plt.axvline(x = 3, color = 'green',linestyle=':')
+    # plt.annotate(' 3 Hz', (3,A),color='black',size=s_annotate)
+
+    # #plt.axvline(x = IAFW-2, color = 'teal', linestyle=':')
+    # #plt.annotate(' Wake IAF-2Hz', (IAFW-2,50),color='black',size=s_annotate)
+    # plt.axvline(x = IAFW, color = 'maroon',linestyle=':')
+    # plt.annotate(' Wake IAF', (IAFW,A),color='black',size=s_annotate)
+
+    # plt.axvline(x = IAFD-2, color = 'lightseagreen', linestyle=':')
+    # plt.annotate(' Drows IAF-2Hz', (IAFD-2,A),color='black',size=s_annotate)
+    # #plt.axvline(x = IAFD, color = 'firebrick',linestyle=':')
+    # #plt.annotate(' Drows IAF', (IAFD,0),color='black',size=s_annotate)
+
+    # #plt.axvline(x = IAFN1-2, color = 'mediumaquamarine', linestyle=':')
+    # #plt.annotate('Sleep IAF-2Hz', (IAFN1-2,50),color='black',size=s_annotate)
+    # #plt.axvline(x = IAFN1, color = 'indianred',linestyle=':')
+    # #plt.annotate('Sleep IAF', (IAFN1,50),color='black',size=s_annotate)
+
+
+    #plt.xticks(Time, ticks[:])
+    plt.xlim(1,20)
+    plt.title(title, loc='left')
+    #plt.ylim(0,A)
+    plt.ylim((10**-1,10**2))
+    plt.yscale('log')
+    plt.ylabel('Absolute power')
+    plt.xlabel('Frequency [Hz]')
+    plt.legend(borderaxespad=0,fontsize=10,ncol=6,bbox_to_anchor=(1, 1.05)) 
+    plt.grid('On')
 
 def vertex(subject,title=None,size=None):
     #Time = np.arange(0, 1/256*1000, 0.00764)
@@ -583,7 +655,20 @@ def group_all(group,columns_names_bands,bands,df_bands,colums,col,tren,legend,pa
             # #plt.ylim(0,50)
             # plt.legend(borderaxespad=0,fontsize=10,ncol=4,bbox_to_anchor=(0.5, 0.98))  
             # plt.grid('On') 
-                                    
+        elif bands == 'Fz, Cz, Pz, O1O2':
+            if c == None:
+                if title == 'Channels':
+                    s=subject.drop(['sbj'], axis=1)
+                    n=0
+                    m=0
+                    for p in range(int(np.floor(len(subject.columns)/4))):
+                        m+=6
+                        new_subject = s.iloc[:,n:m]
+                        new_subject.insert(loc=0, column='sbj', value=subject.sbj)
+                        Ch = ['Wakefulness','Ripples','Diffuse Theta']
+                        plt.figure()
+                        iter_Ch(subject=new_subject,title=Ch[p])
+                        n+=6                            
         else:
             if c == None:
                 plt.figure()

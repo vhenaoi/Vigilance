@@ -96,6 +96,8 @@ def _verf_bands(bands):
         bands = ['gamma']
     if bands == 'all_ind_bands':
         bands = ['alpha','alpha2','delta','theta','deltatheta','beta','gamma']
+    if bands == 'Fz, Cz, Pz, O1O2':
+        bands == ['Fz','Cz','Pz','O1O2']
     return bands
 
 ##Multi_Input 
