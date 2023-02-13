@@ -7,4 +7,6 @@ Descargar el archivo Graphs_VigilanceManual.pdf para más información
 https://codigofacilito.com/articulos/archivos-ejecutables-python
 https://stackoverflow.com/questions/31631147/program-doesnt-work-as-single-and-noconsole-exe-file-pyinstaller
 
-python3 -m PyInstaller --onefile --noconsole "_ _main_ _.py"
+Ejecutar en consalo: python3 -m PyInstaller --onefile --noconsole "_ _main_ _.py"
+Ingresar al archivo _ _main_ _.spec  y agregar: datas=[('./files/*.xlsx', 'files')]
+Ejecutar en consalo: pyinstaller _ _main_ _.spec 
